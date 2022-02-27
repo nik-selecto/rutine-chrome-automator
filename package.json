@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "gitam": "git add -A && git cz",
     "build": "npx tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "start:dev": "ts-node-dev src/index.ts",
@@ -25,7 +26,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.0.0",
+    "puppeteer": "^13.4.0"
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",
