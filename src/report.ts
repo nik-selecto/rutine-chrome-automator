@@ -13,4 +13,9 @@ export default async function reportVideo(page: Page, url: string) {
     const [, reportButton] = await page.$x(VideoSelector.DESCRIPTION_REPORT_FEEDBACK_buttons);
 
     await reportButton.click();
+    await page.waitForXPath(VideoSelector.SPAM_radio);
+
+    const [spamRadio] = await page.$x(VideoSelector.SPAM_radio);
+
+    await spamRadio.click();
 }

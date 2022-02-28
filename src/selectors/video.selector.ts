@@ -2,4 +2,5 @@
 export enum VideoSelector {
     MORE_button = '//button[starts-with(@aria-label, "Ещё") or starts-with(@aria-label, "More") or starts-with(@aria-label, "Інші")]',
     DESCRIPTION_REPORT_FEEDBACK_buttons = '//tp-yt-paper-item[@role="option"]',
+    SPAM_radio = '//*[contains(@aria-label, "Спам") or contains(@aria-label, "Spam")]',
 }
