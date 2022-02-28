@@ -1,17 +1,23 @@
 import { config } from 'dotenv';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
+import stealthPlugin from 'puppeteer-extra-plugin-stealth';
 import login from './login';
-import pause from './utils/pause.utils';
+import getEmailPasswordFromCli from './utils/get-email-password-from-cli.utils';
 
 config();
 
 async function main() {
     try {
+        const emailPassword = await getEmailPasswordFromCli();
+
+        // with this plugin google can't detect automation on login stage
+        puppeteer.use(stealthPlugin());
+
         const browser = await puppeteer.launch({ headless: false });
         const page = await browser.newPage();
 
-        await login(page, { email: '', password: '' });
-        await pause(5000);
+        // TODO sometimes couldn't click "SIGN IN" button
+        await login(page, emailPassword);
         await browser.close();
     } catch (error) {
         console.error(error);
