@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "engines": {
+    "node": "16"
+  },
   "scripts": {
     "gitam": "git add -A && git cz",
     "build": "npx tsc -p tsconfig.json",
