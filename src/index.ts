@@ -20,7 +20,7 @@ async function main() {
 
         // TODO sometimes couldn't click "SIGN IN" button
         await login(page, emailPassword);
-        await reportVideo(page, 'https://www.youtube.com/shorts/x_8y71hJfns');
+        await reportVideo(page, 'https://www.youtube.com/watch?v=YBS8D6BkpIw');
         await pause(7000);
         await browser.close();
     } catch (error) {

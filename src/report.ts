@@ -2,16 +2,27 @@ import { Page } from 'puppeteer';
 import { VideoOptionsSelector } from './selectors/video.selector';
 import pause from './utils/pause.utils';
 
-export default async function reportVideo(page: Page, url: string) {
+export default async function reportVideo(page: Page, url: string, reportMessage: string = 'This video is not truth. And It\'s goal is to MAKE WAR between Russian and Ukraine!') {
     await page.goto(url);
-    await page.waitForXPath(VideoOptionsSelector.MORE_button);
+    await page.waitForXPath(VideoOptionsSelector.MORE_ON_STORY_buttons_story_0_video_1);
 
-    const [moreButton] = await page.$x(VideoOptionsSelector.MORE_button);
+    let isVideo = false;
+    const [forStoryMoreButton, forVideoMoreButton] = await page.$x(VideoOptionsSelector.MORE_ON_STORY_buttons_story_0_video_1);
 
-    await moreButton.click();
-    await page.waitForXPath(VideoOptionsSelector.DESCRIPTION_REPORT_FEEDBACK_buttons);
+    try {
+        await forStoryMoreButton.click();
+    } catch (error) {
+        console.error(error);
+        await forVideoMoreButton.click();
+        isVideo = true;
+    }
 
-    const [, reportButton] = await page.$x(VideoOptionsSelector.DESCRIPTION_REPORT_FEEDBACK_buttons);
+    pause(5000);
+
+    await page.waitForXPath(VideoOptionsSelector.DESCRIPTION_REPORT_FEEDBACK_buttons_story_1_video_0);
+
+    const reportButtons = await page.$x(VideoOptionsSelector.DESCRIPTION_REPORT_FEEDBACK_buttons_story_1_video_0);
+    const reportButton = reportButtons[isVideo ? 0 : 1];
 
     await reportButton.click();
     await page.waitForXPath(VideoOptionsSelector.SPAM_radio);
@@ -44,7 +55,7 @@ export default async function reportVideo(page: Page, url: string) {
 
     const [textarea] = await page.$x(VideoOptionsSelector.REPORT_textarea);
 
-    await textarea.type('This video is not truth. And It\'s goal is to MAKE WAR between Russian and Ukraine!');
+    await textarea.type(reportMessage);
 
     const [, finalReportButton] = await page.$x(VideoOptionsSelector.REPORT_buttons_2);
 
