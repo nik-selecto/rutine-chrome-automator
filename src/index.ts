@@ -4,24 +4,30 @@ import stealthPlugin from 'puppeteer-extra-plugin-stealth';
 import login from './login';
 import reportVideo from './report';
 import getEmailPasswordFromCli from './utils/get-email-password-from-cli.utils';
-import pause from './utils/pause.utils';
 
 config();
 
 async function main() {
+    const badGuys: {
+        url: string,
+        reportMessage?: string,
+    }[] = [];
+
     try {
         const emailPassword = await getEmailPasswordFromCli();
 
-        // with this plugin google can't detect automation on login stage
         puppeteer.use(stealthPlugin());
 
         const browser = await puppeteer.launch({ headless: false });
         const page = await browser.newPage();
 
-        // TODO sometimes couldn't click "SIGN IN" button
         await login(page, emailPassword);
-        await reportVideo(page, 'https://www.youtube.com/watch?v=YBS8D6BkpIw');
-        await pause(7000);
+
+        for (let i = 0; i < badGuys.length; ++i) {
+            // eslint-disable-next-line no-await-in-loop
+            await reportVideo(page, badGuys[i].url, badGuys[i].reportMessage);
+        }
+
         await browser.close();
     } catch (error) {
         console.error(error);

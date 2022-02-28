@@ -12,12 +12,12 @@ export default async function reportVideo(page: Page, url: string, reportMessage
     try {
         await forStoryMoreButton.click();
     } catch (error) {
-        console.error(error);
+        console.warn('==== THIS ERROR IS UNDER CONTROL, IT`S OK ===');
+        console.warn(error);
+        console.warn('=============================================');
         await forVideoMoreButton.click();
         isVideo = true;
     }
-
-    pause(5000);
 
     await page.waitForXPath(VideoOptionsSelector.DESCRIPTION_REPORT_FEEDBACK_buttons_story_1_video_0);
 
@@ -33,18 +33,14 @@ export default async function reportVideo(page: Page, url: string, reportMessage
     await page.waitForXPath(VideoOptionsSelector.REPORT_checkboxes_5);
 
     const checkboxes = await page.$x(VideoOptionsSelector.REPORT_checkboxes_5);
-    // TODO rm this hardcode
     const spamCheckbox = checkboxes[5];
 
     await spamCheckbox.click();
-    // await pause(5000);
     await page.waitForXPath(VideoOptionsSelector.SPAM_checkItems_30);
 
     const checkItems = await page.$x(VideoOptionsSelector.SPAM_checkItems_30);
-    // TODO rm this hardcode
     const falseInfoCheckItem = checkItems[30];
 
-    // TODO rm this hardcode
     await pause(1500);
     await falseInfoCheckItem.click();
 
