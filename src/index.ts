@@ -1,6 +1,7 @@
 import { config } from 'dotenv';
 import puppeteer from 'puppeteer-extra';
 import stealthPlugin from 'puppeteer-extra-plugin-stealth';
+import getReports from './get-reports';
 import login from './login';
 import reportVideo from './report';
 import getEmailPasswordFromCli from './utils/get-email-password-from-cli.utils';
@@ -8,10 +9,11 @@ import getEmailPasswordFromCli from './utils/get-email-password-from-cli.utils';
 config();
 
 async function main() {
-    const badGuys: {
+    let skipCounter = 0;
+    let badGuys: {
         url: string,
         reportMessage?: string,
-    }[] = [];
+    }[] = await getReports(skipCounter);
 
     try {
         const emailPassword = await getEmailPasswordFromCli();
@@ -23,9 +25,13 @@ async function main() {
 
         await login(page, emailPassword);
 
-        for (let i = 0; i < badGuys.length; ++i) {
+        while (badGuys.length) {
+            for (let i = 0; i < badGuys.length; ++i) {
+                // eslint-disable-next-line no-await-in-loop
+                await reportVideo(page, badGuys[i].url, badGuys[i].reportMessage);
+            }
             // eslint-disable-next-line no-await-in-loop
-            await reportVideo(page, badGuys[i].url, badGuys[i].reportMessage);
+            badGuys = await getReports(skipCounter += 10);
         }
 
         await browser.close();
