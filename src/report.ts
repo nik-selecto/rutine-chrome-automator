@@ -8,7 +8,6 @@ export default async function reportVideo(page: Page, url: string, reportMessage
 
     let isVideo = false;
     const [forStoryMoreButton, forVideoMoreButton] = await page.$x(VideoOptionsSelector.MORE_ON_STORY_buttons_story_0_video_1);
-
     try {
         await forStoryMoreButton.click();
     } catch (error) {
@@ -41,7 +40,7 @@ export default async function reportVideo(page: Page, url: string, reportMessage
     const checkItems = await page.$x(VideoOptionsSelector.SPAM_checkItems_30);
     const falseInfoCheckItem = checkItems[30];
 
-    await pause(1500);
+    await pause(3000);
     await falseInfoCheckItem.click();
 
     const [nextButton] = await page.$x(VideoOptionsSelector.NEXT_button);

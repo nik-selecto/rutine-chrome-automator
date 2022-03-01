@@ -10,7 +10,7 @@ config();
 
 async function main() {
     let skipCounter = 0;
-    let badGuys: {
+    const badGuys: {
         url: string,
         reportMessage?: string,
     }[] = await getReports(skipCounter);
@@ -27,11 +27,12 @@ async function main() {
 
         while (badGuys.length) {
             for (let i = 0; i < badGuys.length; ++i) {
+                const report = badGuys.pop();
                 // eslint-disable-next-line no-await-in-loop
-                await reportVideo(page, badGuys[i].url, badGuys[i].reportMessage);
+                await reportVideo(page, report!.url, report!.reportMessage);
             }
             // eslint-disable-next-line no-await-in-loop
-            badGuys = await getReports(skipCounter += 10);
+            badGuys.concat(await getReports(skipCounter += 10));
         }
 
         await browser.close();

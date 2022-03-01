@@ -1,3 +1,4 @@
+import { isEmail } from 'class-validator';
 import inquierer from 'inquirer';
 
 export default async function getEmailPasswordFromCli() {
@@ -15,7 +16,7 @@ export default async function getEmailPasswordFromCli() {
         },
     ]);
 
-    if (!email || !/\w+@\w+\.\w+/.test(email)) {
+    if (!isEmail(email)) {
         throw new Error(`First arg should be your youtube's email! Actual value: "${email}"`);
     }
 
