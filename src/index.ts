@@ -1,23 +1,21 @@
-import { config } from 'dotenv';
 import puppeteer from 'puppeteer-extra';
 import stealthPlugin from 'puppeteer-extra-plugin-stealth';
-import { generateUrl } from './generate-url';
-import { login } from './login';
-import pause from './utils/pause.utils';
+import { config } from 'dotenv';
+import { googleDriveOAuth2 } from './scenarios/google-drive-oauth2/google-drive.oauth2';
 
 config();
 
 async function main() {
     try {
-        puppeteer.use(stealthPlugin());
-
-        const { EMAIL: email, PASSWORD: password } = process.env;
-        const browser = await puppeteer.launch({ headless: false });
+        const browser = await puppeteer
+            .use(stealthPlugin())
+            .launch({ headless: true });
         const page = await browser.newPage();
 
-        await page.goto(generateUrl());
-        await login(page, { email, password });
-        await pause(300000);
+        await googleDriveOAuth2(page, {
+            pathToEnv: '/Users/nikitamoiseienko/flysystem-ts/.test.env',
+            key: 'GDRIVE_AUTH_CODE',
+        });
 
         await browser.close();
     } catch (error) {
