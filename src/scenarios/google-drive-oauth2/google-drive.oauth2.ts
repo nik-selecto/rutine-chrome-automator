@@ -31,26 +31,21 @@ export async function googleDriveOAuth2(page: Page, options: {
     pathToEnv: string,
     key: string,
 }) {
-    try {
-        const url = generateUrl();
-        const { email, password } = JSON.parse(readFileSync(USER_EMAIL_PASSWORD_PATH, { encoding: 'utf-8' }));
+    const url = generateUrl();
+    const { email, password } = JSON.parse(readFileSync(USER_EMAIL_PASSWORD_PATH, { encoding: 'utf-8' }));
 
-        await page.goto(url);
-        await googleLogin(page, { email, password });
+    await page.goto(url);
+    await googleLogin(page, { email, password });
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-        const [_url, query] = page.url().split('?');
-        const { code } = qs.parse(query);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+    const [_url, query] = page.url().split('?');
+    const { code } = qs.parse(query);
 
-        if (!code) {
-            throw new Error('...ooops... Any "code" found');
-        }
-
-        const { pathToEnv, key } = options;
-
-        rewriteEnvProp(pathToEnv, [key, code as string]);
-    } catch (error) {
-        console.error(error);
-        process.exit(1);
+    if (!code) {
+        throw new Error('...ooops... Any "code" found');
     }
+
+    const { pathToEnv, key } = options;
+
+    rewriteEnvProp(pathToEnv, [key, code as string]);
 }
